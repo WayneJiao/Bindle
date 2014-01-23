@@ -1,0 +1,42 @@
+# !!!! BE SURE TO UPDATE THE PATH BELOW
+dummy_box_url = "file:///ABSOLUTE/PATH/TO/LOCAL/COPY/OF/ubuntu_12_04.box"
+
+nodes = [
+  { :hostname => "web-vm",  :box => "ubuntu_12_04", :box_url => dummy_box_url },
+]
+
+Vagrant.configure("2") do |config|
+
+  # vCloud Director provider settings
+  config.vm.provider :vcloud do |vcloud|
+    vcloud.hostname = "https://extcloud01.ebi.ac.uk"
+    vcloud.username = "admin"
+    vcloud.password = "FILLMEIN"
+
+    vcloud.org_name = "OICR"
+    vcloud.vdc_name = "OICR vDc"
+
+    vcloud.catalog_name = "vagrantTest"
+#    vcloud.ip_subnet = "192.168.1.0/24"
+
+    vcloud.vdc_network_name = "OICR-routed"
+
+    vcloud.vdc_edge_gateway = "OICR-routed"
+    vcloud.vdc_edge_gateway_ip = "FILLMEIN"
+  end
+
+  nodes.each do |node|
+    config.vm.define node[:hostname] do |node_config|
+      node_config.vm.box = node[:box]
+      node_config.vm.hostname = node[:hostname]
+      node_config.vm.box_url = node[:box_url]
+      node_config.vm.network :forwarded_port, guest: 80, host: 8080, auto_correct: true
+      # node_config.vm.provision :puppet do |puppet|
+      #   puppet.manifests_path = 'puppet/manifests'
+      #   puppet.manifest_file = 'site.pp'
+      #   puppet.module_path = 'puppet/modules'
+      # end
+    end
+  end
+end
+
