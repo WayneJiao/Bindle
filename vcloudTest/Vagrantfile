@@ -2,7 +2,7 @@
 dummy_box_url = "file:///ABSOLUTE/PATH/TO/LOCAL/COPY/OF/ubuntu_12_04.box"
 
 nodes = [
-  { :hostname => "web-vm",  :box => "ubuntu_12_04", :box_url => dummy_box_url },
+  { :hostname => "web-vm",  :box => "ubuntu_12.04_vagrant_vmwaretools", :box_url => dummy_box_url },
 ]
 
 Vagrant.configure("2") do |config|
