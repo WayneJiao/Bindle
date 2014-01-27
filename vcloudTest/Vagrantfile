@@ -1,6 +1,8 @@
 # !!!! BE SURE TO UPDATE THE PATH BELOW
 dummy_box_url = "file:///ABSOLUTE/PATH/TO/LOCAL/COPY/OF/ubuntu_12_04.box"
 
+# Old box name (made for us by EBI, with no vagrant stuff installed): ubuntu_12_04
+# New box name (with vagrant accounts): ubuntu_12.04_vagrant_vmwaretools
 nodes = [
   { :hostname => "web-vm",  :box => "ubuntu_12.04_vagrant_vmwaretools", :box_url => dummy_box_url },
 ]
