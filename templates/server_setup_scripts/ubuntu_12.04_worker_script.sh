@@ -9,6 +9,11 @@ hostname %{HOST}
 apt-get update
 export DEBIAN_FRONTEND=noninteractive
 
+#sudo mkdir -p /share
+#sudo mount -t glusterfs master:/glustershare /share
+#sudo echo -e "master:/glustershare\t/share\tglusterfs\tdefaults,_netdev\t0\t0" >> /etc/fstab
+
+
 # common installs for master and workers
 apt-get -q -y --force-yes install git maven sysv-rc-conf xfsprogs
 apt-get -q -y --force-yes install hadoop-0.20-mapreduce-tasktracker hadoop-hdfs-datanode hadoop-client hbase-regionserver
@@ -60,9 +65,9 @@ mkdir -p /usr/tmp/seqware-oozie
 mkdir -p /datastore
 echo 'rpcbind : ALL' >> /etc/hosts.deny
 echo 'rpcbind : %{MASTER_PIP}' >> /etc/hosts.allow
-mount %{MASTER_PIP}:/home /home
-mount %{MASTER_PIP}:/usr/tmp/seqware-oozie /usr/tmp/seqware-oozie
-mount %{MASTER_PIP}:/datastore /datastore
+mount -o nolock %{MASTER_PIP}:/home /home
+mount -o nolock %{MASTER_PIP}:/usr/tmp/seqware-oozie /usr/tmp/seqware-oozie
+mount -o nolock %{MASTER_PIP}:/datastore /datastore
 
 chmod a+rwx /home
 chmod a+rwx /usr/tmp/seqware-oozie

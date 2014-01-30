@@ -3,6 +3,13 @@
 # add seqware user
 useradd -d /home/seqware -m seqware -s /bin/bash
 
+mkdir -p -m 777 /mnt/home/seqware
+cp -R /home/seqware/* /mnt/home/seqware
+rm -rf /home/seqware
+usermod -d /mnt/home/seqware/ seqware
+ln -f -s /mnt/home/seqware /home/seqware
+chown -R seqware:seqware /mnt/home/seqware 
+
 # various seqware dirs
 mkdir -p /home/seqware/bin
 mkdir -p /home/seqware/jars
@@ -34,6 +41,7 @@ echo "export MAVEN_OPTS='-Xmx1024m -XX:MaxPermSize=512m'" >> /home/seqware/.bash
 
 # make everything owned by seqware
 chown -R seqware:seqware /home/seqware
+chown -R seqware:seqware /mnt/home/seqware
 
 # correct permissions
 su - seqware -c 'chmod 640 /home/seqware/.seqware/settings'
@@ -43,6 +51,7 @@ su - seqware -c 'cd /home/seqware/gitroot/seqware; git hf init; git hf update'
 
 # build with develop
 su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BRANCH_CMD}'
+echo '%{SEQWARE_BUILD_CMD}'
 su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_BUILD_CMD} 2>&1 | tee build.log'
 
 export SEQWARE_VERSION=`ls /home/seqware/gitroot/seqware/seqware-distribution/target/seqware-distribution-*-full.jar | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?' | head -1`
@@ -56,7 +65,7 @@ chmod +x /home/seqware/bin/seqware
 echo 'export PATH=$PATH:/home/seqware/bin' >> /home/seqware/.bash_profile
 
 # make everything owned by seqware
-chown -R seqware:seqware /home/seqware
+sudo chown -R seqware:seqware /home/seqware
 
 # seqware database
 /etc/init.d/postgresql start
@@ -99,7 +108,7 @@ perl -pi -e "s/test_seqware_meta_db/seqware_meta_db/;" /etc/tomcat6/Catalina/loc
 cp -r /home/seqware/gitroot/seqware/seqware-distribution/docs/vm_landing/* /var/www/
 
 # run full integration testing
-su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_IT_CMD} 2>&1 | tee it.log'
+#su - seqware -c 'cd /home/seqware/gitroot/seqware; %{SEQWARE_IT_CMD} 2>&1 | tee it.log'
 
 # setup cronjobs after testing to avoid WorkflowStatusChecker or Launcher clashes
 cp /vagrant/status.cron /home/seqware/crons/

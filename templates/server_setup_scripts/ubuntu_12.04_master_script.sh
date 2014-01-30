@@ -50,7 +50,10 @@ update-alternatives --set hadoop-conf /etc/hadoop/conf.my_cluster
 # hdfs config
 # should setup multiple directories in hdfs-site.xml
 # TODO: this assumes /mnt has the ephemeral drive!
-ln -s /mnt /data
+#echo "Making /mnt/data"
+mkdir -p -m 777 /mnt/data
+ln -s /mnt/data /data
+
 mkdir -p /data/1/dfs/nn /data/1/dfs/dn
 chown -R hdfs:hdfs /data/1/dfs/nn /data/1/dfs/dn
 chmod 700 /data/1/dfs/nn /data/1/dfs/dn
@@ -113,8 +116,12 @@ service hue restart
 for i in apache2 cron hadoop-hdfs-namenode hadoop-hdfs-datanode hadoop-hdfs-secondarynamenode hadoop-0.20-mapreduce-tasktracker hadoop-0.20-mapreduce-jobtracker hue oozie postgresql tomcat6 hbase-master hbase-regionserver; do echo $i; sysv-rc-conf $i on; done
 
 # configure dirs for seqware
-mkdir -p /usr/tmp/seqware-oozie 
+
+#mkdir -p /usr/tmp/seqware-oozie 
 chmod -R a+rwx /usr/tmp/
+mkdir -p -m 777 /mnt/seqware-oozie
+ln -fs /mnt/seqware-oozie /usr/tmp/seqware-oozie
+#mkdir -p /usr/tmp/seqware-oozie
 chown -R seqware:seqware /usr/tmp/seqware-oozie
 
 sudo mkdir /datastore

@@ -58,3 +58,22 @@ apt-get -q -y --force-yes install libasound2 libxi6 libxtst6 libxt6 language-pac
 wget http://archive.cloudera.com/cm4/ubuntu/precise/amd64/cm/pool/contrib/o/oracle-j2sdk1.6/oracle-j2sdk1.6_1.6.0+update31_amd64.deb &> /dev/null
 dpkg -i oracle-j2sdk1.6_1.6.0+update31_amd64.deb &> /dev/null
 
+apt-get -q -y --force-yes install glusterfs-server glusterfs-client fuse
+
+umount /mnt
+mkdir -p -m 1777 /data/glusterfs/glustershare/brick{1..4}
+
+mkfs.ext4 -m 1 -L gluster /dev/xvdb
+mkfs.ext4 -m 1 -L gluster /dev/xvdc
+mkfs.ext4 -m 1 -L gluster /dev/xvdd
+mkfs.ext4 -m 1 -L gluster /dev/xvde
+
+mount /dev/xvdb /data/glusterfs/glustershare/brick1
+mount /dev/xvdc /data/glusterfs/glustershare/brick2
+mount /dev/xvdd /data/glusterfs/glustershare/brick3
+mount /dev/xvde /data/glusterfs/glustershare/brick4
+
+echo -e "LABEL=gluster\t/data/glusterfs/glustershare/brick1\text4\tnoatime\t0\t2" >> /etc/fstab
+echo -e "LABEL=gluster\t/data/glusterfs/glustershare/brick2\text4\tnoatime\t0\t2" >> /etc/fstab
+echo -e "LABEL=gluster\t/data/glusterfs/glustershare/brick3\text4\tnoatime\t0\t2" >> /etc/fstab
+echo -e "LABEL=gluster\t/data/glusterfs/glustershare/brick4\text4\tnoatime\t0\t2" >> /etc/fstab

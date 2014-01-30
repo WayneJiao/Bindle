@@ -35,6 +35,24 @@
       aws.instance_type = "%{AWS_INSTANCE_TYPE}"
       override.ssh.username = "%{AWS_SSH_USERNAME}"
       override.ssh.private_key_path = "%{AWS_SSH_PEM_FILE}"
+      aws.block_device_mapping = [
+       {
+         :DeviceName => "/dev/sdb", 
+         :VirtualName => "ephemeral0"
+       },
+       {  
+         :DeviceName => "/dev/sdc", 
+         :VirtualName => "ephemeral1"
+       },
+       {
+         :DeviceName => "/dev/sdd",
+         :VirtualName => "ephemeral2"
+       },
+       {
+         :DeviceName => "/dev/sde",
+         :VirtualName => "ephemeral3"
+       }
+      ]
     end
 
     %{custom_hostname}.vm.provider :openstack do |os, override| # e.g. BioNimbus' Sullivan cluster
